@@ -17,6 +17,17 @@ export default function App() {
   const [variancia, setVariancia] = useState(0);
   const [cv, setCv] = useState(0);
 
+  //controle Tela
+  const [tela, setTela] = useState(0);
+
+  const telamediaA = () => {
+    setTela(0);
+    console.log("oi");
+  };
+  const telamediaP = () => {
+    setTela(1);
+  };
+
   const mediaAritmetica = () => {
     let soma = 0;
     dados.map(item => {
@@ -85,10 +96,27 @@ export default function App() {
           <br />
 
           <div id="buttons">
-           <Button color="primary">Media Aritmetica</Button>{' '}
+            <Button color="primary" OnClick={telamediaA}>
+              Media Aritmetica
+            </Button>{" "}
+            <Button color="primary" OnClick={telamediaP}>
+              Media Ponderada
+            </Button>{" "}
+            <Button color="primary">Media Aritmetica</Button>{" "}
+            <Button color="primary">Media Aritmetica</Button>{" "}
           </div>
         </Card>
       </Col>
+      {tela === 1 && (
+        <container class="container-fluid">
+          <p>1</p>
+        </container>
+      )}
+      {tela === 1 && (
+        <container class="container-fluid">
+          <p>2</p>
+        </container>
+      )}
     </div>
   );
 }
