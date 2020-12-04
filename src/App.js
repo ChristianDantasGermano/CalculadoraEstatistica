@@ -55,6 +55,7 @@ export default function App() {
     setResultadomedia(r);
   };
 
+
   //3- Mediana
 
   const calculoMediana = () => {
