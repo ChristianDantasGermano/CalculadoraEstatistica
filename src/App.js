@@ -35,10 +35,7 @@ export default function App() {
   //Tela Variância Amostral
   const [resultVarianciaAmostral, setResultVarianciaAmostral] = useState(0);
   //Tela Variância Populacional
-  const [
-    resultVarianciaPopulacional,
-    setResultVarianciaPopulacional
-  ] = useState(0);
+  const [resultVarianciaPopulacional, setResultVarianciaPopulacional] = useState(0);
   //Tela Desvio Padrão
   const [resultDesvioPadrao, setResultDesvioPadrao] = useState(0);
   //Tela Coeficiente de Variação
@@ -205,7 +202,7 @@ export default function App() {
 
   const varianciaAmostral = () => {
     //criando variaveis locais para o calculo
-    let n = contMediaA - 1;
+    let n = (contMediaA - 1);
     let media = resultMediaA;
     let somaValores = 0;
     //mapeamento dos dados
@@ -215,8 +212,8 @@ export default function App() {
       somaValores = somaValores + calculo;
     });
     //cálculos finais e setando o resultado na variável definitiva
-    console.log("somaValores", somaValores);
-    let r = somaValores / n;
+        console.log('somaValores',somaValores)
+    let r = (somaValores / n);
     setResultVarianciaAmostral(r);
   };
 
@@ -250,16 +247,53 @@ export default function App() {
     let desvio = resultDesvioPadrao;
     let media = resultMediaA;
     //calculando o coeficiente
-    let r = desvio / media;
+    let r = (desvio / media);
     //setando a variável final
-    r = r * 100;
-    console.log("desvio", desvio);
-    console.log("media", media);
+    r = r * 100
+    console.log('desvio',desvio)
+    console.log('media',media)
     setResultCoeficienteVariacao(r);
   };
 
   return (
     <div className="container align-self-center" id="container-home">
+      <Col style={{ padding: 10 }}>
+        <Card>
+          <h1>MENU</h1>
+          <br />
+
+          <div id="buttons">
+            <Button color="primary" onClick={telamediaA}>
+              Media Aritmetica
+            </Button>{" "}
+            <Button color="primary" onClick={telamediaP}>
+              Media Ponderada
+            </Button>{" "}
+            <Button color="primary" onClick={telamediana}>
+              Mediana
+            </Button>{" "}
+            <Button color="primary" onClick={telamoda}>
+              Moda
+            </Button>{" "}
+            <Button color="primary" onClick={telaDesvioMedio }>
+              Desvio Médio
+            </Button>{" "}
+            <Button color="primary" onClick={telaVariancaAmostral }>
+              Variância Amostral
+            </Button>{" "}
+            <Button color="primary" onClick={telaVariancaPopulacional }>
+              Variância Populacional
+            </Button>{" "}
+            <Button color="primary" onClick={telaDesvioPadrao }>
+              Desvio Padrão
+            </Button>{" "}
+            <Button color="primary" onClick={telaCoeficienteVarianca}>
+              Coeficiente de Variação
+            </Button>{" "}
+
+          </div>
+        </Card>
+      </Col>
       {tela === 0 && (
         <Container className="container-fluid">
           <Row>
@@ -267,7 +301,7 @@ export default function App() {
               +
             </Button>
           </Row>
-          
+
           <Row>
             {valorMediaA.map((media, index) => (
               <Col sm={3} key={index}>
