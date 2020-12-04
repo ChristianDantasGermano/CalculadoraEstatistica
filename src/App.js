@@ -14,8 +14,6 @@ import {
 
 export default function App() {
   //variaveis gerais
-  const [dados, setDados] = useState([]);
-  const [pesos, setPesos] = useState([]);
   const [contMediaA, setContMediaA] = useState(0);
   //controle Tela
   const [tela, setTela] = useState(0);
@@ -35,49 +33,15 @@ export default function App() {
   //Tela Variância Amostral
   const [resultVarianciaAmostral, setResultVarianciaAmostral] = useState(0);
   //Tela Variância Populacional
-  const [resultVarianciaPopulacional, setResultVarianciaPopulacional] = useState(0);
+  const [
+    resultVarianciaPopulacional,
+    setResultVarianciaPopulacional
+  ] = useState(0);
   //Tela Desvio Padrão
   const [resultDesvioPadrao, setResultDesvioPadrao] = useState(0);
   //Tela Coeficiente de Variação
   const [resultCoeficienteVariacao, setResultCoeficienteVariacao] = useState(0);
 
-  //Monitorar variaveis de controle
-  useEffect(() => {
-    console.log("mediana", mediana);
-  }, [mediana]);
-
-  useEffect(() => {
-    console.log("ContmediaA", contMediaA);
-  }, [contMediaA]);
-
-  //Funções gerias da tela
-  const telamediaA = () => {
-    setTela(0);
-  };
-  const telamediaP = () => {
-    setTela(1);
-  };
-  const telamediana = () => {
-    setTela(2);
-  };
-  const telamoda = () => {
-    setTela(3);
-  };
-  const telaDesvioMedio = () => {
-    setTela(4);
-  };
-  const telaVariancaAmostral = () => {
-    setTela(5);
-  };
-  const telaVariancaPopulacional = () => {
-    setTela(6);
-  };
-  const telaDesvioPadrao = () => {
-    setTela(7);
-  };
-  const telaCoeficienteVarianca = () => {
-    setTela(8);
-  };
   //Funções Tela média
   const addValorMediaA = e => {
     e.preventDefault();
@@ -116,6 +80,7 @@ export default function App() {
     setContMediaA(cont);
     let r = soma / cont;
     setResultMediaA(r);
+    setTela(1);
   };
   //Calcular média ponderada
   const mediaPonderada = () => {
@@ -128,9 +93,9 @@ export default function App() {
     pesoMediaP.map(item => {
       somaPeso = somaPeso + parseInt(item);
     });
-    console.log(somaPeso);
     let r = somaValor / somaPeso;
     setResultMediaP(r);
+    calculoGeral();
   };
   //Mediana
   const calculoMediana = () => {
@@ -149,31 +114,12 @@ export default function App() {
       setMediana(resultado);
     }
   };
-  const preparaModa = () => {
-    const summarize = dados => toArray(dados.reduce(summarizeFn, {}));
-    const summarizeFn = function(summary, num) {
-      summary[num] = summary[num]
-        ? { num, count: summary[num].count + 1 }
-        : { num, count: 1 };
-      return summary;
-    };
-    //achar o maior valor entre as frequencias
-    const findMode = summary => summary.reduce(findModeFn, 0);
-    const findModeFn = (max, { count }) => (count > max ? count : max);
-    //cria um array em que só são adicionados os valores da contagem da moda
-    const filterMode = (summary, mode) =>
-      summary.filter(({ count }) => count == mode);
-
-    const getValues = items => items.map(({ num }) => num);
-
-    calculoModa(dados);
-  };
-
-  const calculoModa = function(valor) {
-    const summary = summarize(dados);
-    const mode = findMode(summary);
-    const modeItems = filterMode(summary, mode);
-    return modeItems.length == summary.length ? [] : getValues(modeItems);
+  const calculoGeral = () => {
+    calculoMediana();
+    desvioMedio();
+    varianciaAmostral();
+    varianciaPopulacional();
+    setTela(2);
   };
 
   const desvioMedio = () => {
@@ -202,7 +148,7 @@ export default function App() {
 
   const varianciaAmostral = () => {
     //criando variaveis locais para o calculo
-    let n = (contMediaA - 1);
+    let n = contMediaA - 1;
     let media = resultMediaA;
     let somaValores = 0;
     //mapeamento dos dados
@@ -212,8 +158,7 @@ export default function App() {
       somaValores = somaValores + calculo;
     });
     //cálculos finais e setando o resultado na variável definitiva
-        console.log('somaValores',somaValores)
-    let r = (somaValores / n);
+    let r = somaValores / n;
     setResultVarianciaAmostral(r);
   };
 
@@ -231,326 +176,212 @@ export default function App() {
     //cálculos finais e adicionando na variável final
     let r = somaValores / n;
     setResultVarianciaPopulacional(r);
+    desvioPadrao(r);
   };
 
-  const desvioPadrao = () => {
+  const desvioPadrao = varianca => {
     //pegando o valor da variancia
-    let varianc = resultVarianciaPopulacional;
+    let varianc = varianca;
     //calculando a raiz quadrada da variancia
     let r = sqrt(varianc);
     //setando na variável de desvio padrão
     setResultDesvioPadrao(r);
+    coeficienteVariacao(r);
   };
 
-  const coeficienteVariacao = () => {
+  const coeficienteVariacao = desvioP => {
     //pegando os valores de desvio e média para calculo
-    let desvio = resultDesvioPadrao;
+    let desvio = desvioP;
     let media = resultMediaA;
     //calculando o coeficiente
-    let r = (desvio / media);
+    let r = desvio / media;
     //setando a variável final
     r = r * 100
-    console.log('desvio',desvio)
-    console.log('media',media)
     setResultCoeficienteVariacao(r);
   };
 
   return (
     <div className="container align-self-center" id="container-home">
-      <Col style={{ padding: 10 }}>
-        <Card>
-          <h1>MENU</h1>
-          <br />
-
-          <div id="buttons">
-            <Button color="primary" onClick={telamediaA}>
-              Media Aritmetica
-            </Button>{" "}
-            <Button color="primary" onClick={telamediaP}>
-              Media Ponderada
-            </Button>{" "}
-            <Button color="primary" onClick={telamediana}>
-              Mediana
-            </Button>{" "}
-            <Button color="primary" onClick={telamoda}>
-              Moda
-            </Button>{" "}
-            <Button color="primary" onClick={telaDesvioMedio }>
-              Desvio Médio
-            </Button>{" "}
-            <Button color="primary" onClick={telaVariancaAmostral }>
-              Variância Amostral
-            </Button>{" "}
-            <Button color="primary" onClick={telaVariancaPopulacional }>
-              Variância Populacional
-            </Button>{" "}
-            <Button color="primary" onClick={telaDesvioPadrao }>
-              Desvio Padrão
-            </Button>{" "}
-            <Button color="primary" onClick={telaCoeficienteVarianca}>
-              Coeficiente de Variação
-            </Button>{" "}
-
-          </div>
-        </Card>
-      </Col>
       {tela === 0 && (
         <Container className="container-fluid">
-          <Row>
-            <Button color="primary" onClick={addValorMediaA}>
-              +
+          <Card>
+            <h1>Média Aritmética</h1>
+            <br />
+            <div id="mediaAritmetica">
+              <Row>
+                <Col>
+                  <Button color="primary" onClick={addValorMediaA}>
+                    +
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                {valorMediaA.map((media, index) => (
+                  <Col sm={3} key={index}>
+                    <FormGroup>
+                      <Input
+                        type="number"
+                        name="valorMediaA"
+                        id="valorMediaA"
+                        placeholder="Valor"
+                        value={media}
+                        onChange={e => handleChangeMediaA(e, index)}
+                      />
+                    </FormGroup>
+                  </Col>
+                ))}
+              </Row>
+            </div>
+            <Button color="primary" onClick={mediaAritmetica}>
+              Calcular Média
             </Button>
-          </Row>
-
-          <Row>
-            {valorMediaA.map((media, index) => (
-              <Col sm={3} key={index}>
-                <FormGroup>
-                  <Input
-                    type="number"
-                    name="valorMediaA"
-                    id="valorMediaA"
-                    placeholder="Valor"
-                    value={media}
-                    onChange={e => handleChangeMediaA(e, index)}
-                  />
-                </FormGroup>
-              </Col>
-            ))}
-          </Row>
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediaA"
-                  id="valorMediaA"
-                  placeholder="Resultado"
-                  value={resultMediaA}
-                  disabled
-                />
-              </FormGroup>
-            </Col>
-            <Col>
-              <Button color="primary" onClick={mediaAritmetica}>
-                Calcular Média
-              </Button>
-            </Col>
-          </Row>
+          </Card>
         </Container>
       )}
       {tela === 1 && (
         <Container className="container-fluid">
-          <Row>
-            <Button color="primary" onClick={addValorMediaP}>
-              +
+          <Card>
+            <h1>Média Ponderada</h1>
+            <br />
+            <div id="mediaPonderada">
+              <Row>
+                <Col>
+                  <Button color="primary" onClick={addValorMediaP}>
+                    +
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={6}>
+                  {valorMediaP.map((valormedia, index) => (
+                    <FormGroup key={index}>
+                      <Input
+                        type="number"
+                        name="valorMediaP"
+                        id="valorMediaP"
+                        placeholder="Valor"
+                        value={valormedia}
+                        onChange={e => handleChangeValorMediaP(e, index)}
+                      />
+                    </FormGroup>
+                  ))}
+                </Col>
+                <Col sm={6}>
+                  {pesoMediaP.map((pesomedia, index) => (
+                    <FormGroup key={index}>
+                      <Input
+                        type="number"
+                        name="pesoMediaP"
+                        id="pesoMediaP"
+                        placeholder="Peso"
+                        value={pesomedia}
+                        onChange={e => handleChangePesoMediaP(e, index)}
+                      />
+                    </FormGroup>
+                  ))}
+                </Col>
+              </Row>
+            </div>
+            <Button color="primary" onClick={mediaPonderada}>
+              Calcular Média Ponderada
             </Button>
-          </Row>
-          <Row>
-            <Col sm={6}>
-              {valorMediaP.map((valormedia, index) => (
-                <FormGroup key={index}>
-                  <Input
-                    type="number"
-                    name="valorMediaP"
-                    id="valorMediaP"
-                    placeholder="Valor"
-                    value={valormedia}
-                    onChange={e => handleChangeValorMediaP(e, index)}
-                  />
-                </FormGroup>
-              ))}
-            </Col>
-            <Col sm={6}>
-              {pesoMediaP.map((pesomedia, index) => (
-                <FormGroup key={index}>
-                  <Input
-                    type="number"
-                    name="pesoMediaP"
-                    id="pesoMediaP"
-                    placeholder="Peso"
-                    value={pesomedia}
-                    onChange={e => handleChangePesoMediaP(e, index)}
-                  />
-                </FormGroup>
-              ))}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediaA"
-                  id="valorMediaA"
-                  placeholder="Resultado"
-                  value={resultMediaP}
-                  disabled
-                />
-              </FormGroup>
-            </Col>
-            <Col>
-              <Button color="primary" onClick={mediaPonderada}>
-                Calcular Média Ponderada
-              </Button>
-            </Col>
-          </Row>
+          </Card>
         </Container>
       )}
       {tela === 2 && (
         <Container className="container-fluid">
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediana"
-                  id="valorMediana"
-                  placeholder="Resultado"
-                  value={mediana}
-                  disabled
-                />
-              </FormGroup>
-              <Button color="primary" onClick={calculoMediana}>
-                Calcular Mediana
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-      {tela === 3 && (
-        <Container className="container-fluid">
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediana"
-                  id="valorMediana"
-                  placeholder="Resultado"
-                  value={resultModa}
-                  disabled
-                />
-              </FormGroup>
-              <Button color="primary" onClick={calculoMediana}>
-                Calcular Moda
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-      {tela === 4 && (
-        <Container className="container-fluid">
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediana"
-                  id="valorMediana"
-                  placeholder="Resultado"
-                  value={resultDesvioMedio}
-                  disabled
-                />
-              </FormGroup>
-              <Button color="primary" onClick={desvioMedio}>
-                Calcular Desvio Médio
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-      {tela === 5 && (
-        <Container className="container-fluid">
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediana"
-                  id="valorMediana"
-                  placeholder="Resultado"
-                  value={resultVarianciaAmostral}
-                  disabled
-                />
-              </FormGroup>
-              <Button color="primary" onClick={varianciaAmostral}>
-                Calcular Variância Amostral
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-      {tela === 6 && (
-        <Container className="container-fluid">
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediana"
-                  id="valorMediana"
-                  placeholder="Resultado"
-                  value={resultVarianciaPopulacional}
-                  disabled
-                />
-              </FormGroup>
-              <Button color="primary" onClick={varianciaPopulacional}>
-                Calcular Variância Populacional
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-      {tela === 7 && (
-        <Container className="container-fluid">
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediana"
-                  id="valorMediana"
-                  placeholder="Resultado"
-                  value={resultDesvioPadrao}
-                  disabled
-                />
-              </FormGroup>
-              <Button color="primary" onClick={desvioPadrao}>
-                Calcular Desvio Padrão
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-      {tela === 8 && (
-        <Container className="container-fluid">
-          <Row>
-            <Col>
-              <FormGroup>
-                <Label for="exampleEmail">Resultado:</Label>
-                <Input
-                  type="number"
-                  name="valorMediana"
-                  id="valorMediana"
-                  placeholder="Resultado"
-                  value={resultCoeficienteVariacao}
-                  disabled
-                />
-              </FormGroup>
-              <Button color="primary" onClick={coeficienteVariacao}>
-                Calcular Coeficiente de Variação
-              </Button>
-            </Col>
-          </Row>
+          <Card>
+            <h1>Resultados</h1>
+            <br />
+            <FormGroup>
+              <Label for="exampleEmail">Média Aritmética:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultMediaA}
+                disabled
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleEmail">Média Ponderada:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultMediaP}
+                disabled
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleEmail">Mediana:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={mediana}
+                disabled
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleEmail">Desvio Médio:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultDesvioMedio}
+                disabled
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleEmail">Desvio Padrão:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultDesvioPadrao}
+                disabled
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleEmail">Variancia Amostral:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultVarianciaAmostral}
+                disabled
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleEmail">Variancia Populacional:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultVarianciaPopulacional}
+                disabled
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleEmail">Coeficiente Variação:</Label>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultCoeficienteVariacao}
+                disabled
+              />
+            </FormGroup>
+          </Card>
         </Container>
       )}
     </div>
