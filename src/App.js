@@ -16,7 +16,8 @@ export default function App() {
   //variaveis de dispersão
   const [amplitude, setAmplitude] = useState(0);
   const [dp, setDp] = useState(0);
-  const [variancia, setVariancia] = useState(0);
+  const [varianciaA, setVarianciaA] = useState(0);
+  const [varianciaP, setVarianciaP] = useState(0);
   const [cv, setCv] = useState(0);
 
 
@@ -103,17 +104,25 @@ export default function App() {
   //CALCULO DO DESVIO MÉDIO
 
   const desvioMedio = () => {
+    //setando as variaveis para o cálculo
     let media = resultadoMedia
     let num = numero
     let soma_desvios = 0
+    //mapeando os dados
     dados.map(item =>{
+      //criando variavel auxiliar para o calculo dos desvios
       let auxiliar = 0
+      //calculando o desvio com a fórmula
       auxiliar = auxiliar + (item.value - media)
+      //caso o valor dê negativo, é multiplicado para
+      // virar positivo para a soma
       if(auxiliar < 0){
         auxiliar = auxiliar * (-1)
       }
+      //adicionando os valores na variavel de somas
       soma_desvios = soma_desvios + auxiliar
     })
+    //cálculos finais e colocando na variável definitiva o resultado
     let r = soma_desvios/num
     setDesvioMedio(r);
   };
@@ -123,46 +132,60 @@ export default function App() {
   //1- Variância Amostral
 
   const varianciaAmostral = () => {
+    //criando variaveis locais para o calculo
     let n = this.numero - 1;
     let media = resultadoMedia
     let somaValores = 0;
+    //mapeamento dos dados
     dados.map(item => {
+      //calculando os valores pela fórmula de variãncia e somando na variavel
       let calculo = (item.value - media)**2
       somaValores = somaValores + calculo
     })
+    //cálculos finais e setando o resultado na variável definitiva
     let r = somaValores/n
-    setVariancia(r);
+    setVarianciaA(r);
 
   };
 
   //2- Variância Populacional
 
   const varianciaPopulacional = () => {
+    //criando as variaveis locais para o calculo
     let n = this.numero;
     let media = resultadoMedia
     let somaValores = 0;
+    //mapeando os dados
     dados.map(item => {
+      //calculando os valores com a fórula e adicionando na variável
       let calculo = (item.value - media)**2
       somaValores = somaValores + calculo
     })
+    //cálculos finais e adicionando na variável final
     let r = somaValores/n
-    setVariancia(r);
+    setVarianciaP(r);
   };
 
   //3- Desvio Padrão
 
   const desvioPadrao = () => {
-    let varianc = variancia
+    //pegando o valor da variancia
+    let varianc = varianciaA
+    //calculando a raiz quadrada da variancia
     let r = sqrt(varianc)
+    //setando na variável de desvio padrão
     setDp(r);
   };
 
   //4- Coeficiente de Variação
 
   const coeficienteVariacao = () => {
+    //pegando os valores de desvio e média para calculo
     let desvio = this.dp;
     let media = this.resultadoMedia;
+    //calculando o coeficiente
     let r = (desvio/media) * 100
+    //setando a variável final
     setCv(r);
   };
 
