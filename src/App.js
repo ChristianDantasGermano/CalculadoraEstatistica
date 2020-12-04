@@ -49,6 +49,9 @@ export default function App() {
   const telamediana = () => {
     setTela(2);
   };
+  const telamoda = () => {
+    setTela(3);
+  };
   //Funções Tela média
   const addValorMediaA = e => {
     e.preventDefault();
@@ -120,29 +123,33 @@ export default function App() {
       setMediana(resultado);
     }
   };
+  const preparaModa = () => {
+    const summarize = dados => toArray(dados.reduce(summarizeFn, {}));
+    const summarizeFn = function(summary, num) {
+      summary[num] = summary[num]
+        ? { num, count: summary[num].count + 1 }
+        : { num, count: 1 };
+      return summary;
+    };
+    //achar o maior valor entre as frequencias
+    const findMode = summary => summary.reduce(findModeFn, 0);
+    const findModeFn = (max, { count }) => (count > max ? count : max);
+    //cria um array em que só são adicionados os valores da contagem da moda
+    const filterMode = (summary, mode) =>
+      summary.filter(({ count }) => count == mode);
 
-  const summarize = dados => toArray(dados.reduce(summarizeFn, {}));
-  const summarizeFn = function(summary, num) {
-    summary[num] = summary[num]
-      ? { num, count: summary[num].count + 1 }
-      : { num, count: 1 };
-    return summary;
+    const getValues = items => items.map(({ num }) => num);
+
+    calculoModa(dados)
   };
-  //achar o maior valor entre as frequencias
-  const findMode = summary => summary.reduce(findModeFn, 0);
-  const findModeFn = (max, { count }) => (count > max ? count : max);
-  //cria um array em que só são adicionados os valores da contagem da moda
-  const filterMode = (summary, mode) =>
-    summary.filter(({ count }) => count == mode);
 
-  const getValues = items => items.map(({ num }) => num);
-
-  const calculoModa = function(dados) {
+  const calculoModa = function(valor) {
     const summary = summarize(dados);
     const mode = findMode(summary);
     const modeItems = filterMode(summary, mode);
     return modeItems.length == summary.length ? [] : getValues(modeItems);
   };
+
   const desvioMedio = () => {
     let media;
     let n;
@@ -191,7 +198,9 @@ export default function App() {
             <Button color="primary" onClick={telamediana}>
               Mediana
             </Button>{" "}
-            <Button color="primary">Media Aritmetica</Button>{" "}
+            <Button color="primary" onClick={telamoda}>
+              Moda
+            </Button>{" "}
           </div>
         </Card>
       </Col>
@@ -317,6 +326,28 @@ export default function App() {
               </FormGroup>
               <Button color="primary" onClick={calculoMediana}>
                 Calcular Mediana
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {tela === 3 && (
+        <Container className="container-fluid">
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediana"
+                  id="valorMediana"
+                  placeholder="Resultado"
+                  value={mediana}
+                  disabled
+                />
+              </FormGroup>
+              <Button color="primary" onClick={calculoMediana}>
+                Calcular Moda
               </Button>
             </Col>
           </Row>
