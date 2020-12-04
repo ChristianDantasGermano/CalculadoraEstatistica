@@ -85,21 +85,7 @@ export default function App() {
           <br />
 
           <div id="buttons">
-            <Button outline color="primary">
-              TENDÊNCIA CENTRAL
-            </Button>
-
-            <Button outline color="danger">
-              DISPERSÃO
-            </Button>
-
-            <Button outline color="success">
-              REGRESSÃO
-            </Button>
-
-            <Button outline color="warning">
-              PROBABILIDADE
-            </Button>
+           <Button color="primary">Media Aritmetica</Button>{' '}
           </div>
         </Card>
       </Col>
