@@ -24,22 +24,20 @@ export default function App() {
   const [valorMediaP, setValorMediaP] = useState([]);
   const [pesoMediaP, setPesoMediaP] = useState([]);
   const [resultMediaP, setResultMediaP] = useState(0);
-  //Tela Mediana
+  //Mediana
   const [mediana, setMediana] = useState(0);
-  //Tela Moda
-  const [resultModa, setResultModa] = useState(0);
-  //Tela Desvio Médio
+  //Desvio Médio
   const [resultDesvioMedio, setResultDesvioMedio] = useState(0);
-  //Tela Variância Amostral
+  //Variância Amostral
   const [resultVarianciaAmostral, setResultVarianciaAmostral] = useState(0);
-  //Tela Variância Populacional
+  //Variância Populacional
   const [
     resultVarianciaPopulacional,
     setResultVarianciaPopulacional
   ] = useState(0);
-  //Tela Desvio Padrão
+  //Desvio Padrão
   const [resultDesvioPadrao, setResultDesvioPadrao] = useState(0);
-  //Tela Coeficiente de Variação
+  //Coeficiente de Variação
   const [resultCoeficienteVariacao, setResultCoeficienteVariacao] = useState(0);
 
   //Funções Tela média
