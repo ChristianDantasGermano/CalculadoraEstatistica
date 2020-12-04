@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { sqrt } from 'mathjs'
 import "./style.css";
 import { Card, Col, Button } from "reactstrap";
 
@@ -31,7 +32,8 @@ export default function App() {
       soma = soma + item.value;
     });
     //setando o resultado com a fórmula da média
-    setResultadomedia(soma / numero);
+    let r = soma/numero
+    setResultadomedia(r);
   };
 
   //2- Média Ponderada
@@ -48,7 +50,8 @@ export default function App() {
       somaPeso = somaPeso + item.value;
     });
     //realização do cáuclulo e colocando o resultado na variável
-    setResultadomedia(somaValor / somaPeso);
+    let r = somaValor/somaPeso
+    setResultadomedia(r);
   };
 
   //3- Mediana
@@ -111,7 +114,8 @@ export default function App() {
       }
       soma_desvios = soma_desvios + auxiliar
     })
-    setDesvioMedio(soma_desvios/num);
+    let r = soma_desvios/num
+    setDesvioMedio(r);
   };
 
   //CÁLCULO DAS DISPERSÕES
@@ -126,7 +130,8 @@ export default function App() {
       let calculo = (item.value - media)**2
       somaValores = somaValores + calculo
     })
-    setVariancia()
+    let r = somaValores/n
+    setVariancia(r);
 
   };
 
@@ -134,15 +139,22 @@ export default function App() {
 
   const varianciaPopulacional = () => {
     let n = this.numero;
-    let media;
-    let somaValores;
-    //setar resultado (somaValores / n)
+    let media = resultadoMedia
+    let somaValores = 0;
+    dados.map(item => {
+      let calculo = (item.value - media)**2
+      somaValores = somaValores + calculo
+    })
+    let r = somaValores/n
+    setVariancia(r);
   };
 
   //3- Desvio Padrão
 
   const desvioPadrao = () => {
-    //setando resultado (raiz da variancia)
+    let varianc = variancia
+    let r = sqrt(varianc)
+    setDp(r);
   };
 
   //4- Coeficiente de Variação
@@ -150,8 +162,8 @@ export default function App() {
   const coeficienteVariacao = () => {
     let desvio = this.dp;
     let media = this.resultadoMedia;
-    //setando resultado ((desvio/media)*100)
-    console.log("te amo");
+    let r = (desvio/media) * 100
+    setCv(r);
   };
 
 
