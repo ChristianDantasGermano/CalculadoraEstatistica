@@ -16,7 +16,7 @@ export default function App() {
   //variaveis gerais
   const [dados, setDados] = useState([]);
   const [pesos, setPesos] = useState([]);
-
+  const [contMediaA, setContMediaA] = useState(0);
   //controle Tela
   const [tela, setTela] = useState(0);
   //Tela media Aritimetica
@@ -27,8 +27,13 @@ export default function App() {
   const [pesoMediaP, setPesoMediaP] = useState([]);
   const [resultMediaP, setResultMediaP] = useState(0);
   //Tela Mediana
-  const [contMediana, setContMediana] = useState(0);
   const [mediana, setMediana] = useState(0);
+  //Tela Moda
+  //Tela Desvio Médio
+  //Tela Variância Amostral
+  //Tela Variância Populacional
+  //Tela Desvio Padrão
+  //Tela Coeficiente de Variação
 
   //Monitorar variaveis de controle
   useEffect(() => {
@@ -36,8 +41,8 @@ export default function App() {
   }, [mediana]);
 
   useEffect(() => {
-    console.log("Contmediana", contMediana);
-  }, [contMediana]);
+    console.log("ContmediaA", contMediaA);
+  }, [contMediaA]);
 
   //Funções gerias da tela
   const telamediaA = () => {
@@ -87,7 +92,7 @@ export default function App() {
       soma = soma + parseInt(item);
       cont++;
     });
-    setContMediana(cont);
+    setContMediaA(cont);
     let r = soma / cont;
     setResultMediaA(r);
   };
@@ -111,11 +116,11 @@ export default function App() {
     //verificação de condições de par ou ímpar do número de dados do input
     //para saber o valor ou valores centrais
     if (contMediana % 2 == 1) {
-      let index = (contMediana + 1) / 2;
+      let index = (contMediaA + 1) / 2;
       //setando o valor central na variávekl
       setMediana(valorMediaA[index - 1]);
-    } else if (contMediana % 2 == 0) {
-      let index = contMediana / 2;
+    } else if (contMediaA % 2 == 0) {
+      let index = contMediaA / 2;
       let valor1 = parseInt(valorMediaA[index - 1]);
       let valor2 = parseInt(valorMediaA[index]);
       //pegando a média dos dois valores centrais e setando na variável
@@ -140,7 +145,7 @@ export default function App() {
 
     const getValues = items => items.map(({ num }) => num);
 
-    calculoModa(dados)
+    calculoModa(dados);
   };
 
   const calculoModa = function(valor) {
@@ -151,34 +156,78 @@ export default function App() {
   };
 
   const desvioMedio = () => {
-    let media;
-    let n;
-    let soma_desvios;
+    //setando as variaveis para o cálculo
+    let media = resultadoMedia;
+    let num = numero;
+    let soma_desvios = 0;
+    //mapeando os dados
+    dados.map(item => {
+      //criando variavel auxiliar para o calculo dos desvios
+      let auxiliar = 0;
+      //calculando o desvio com a fórmula
+      auxiliar = auxiliar + (item.value - media);
+      //caso o valor dê negativo, é multiplicado para
+      // virar positivo para a soma
+      if (auxiliar < 0) {
+        auxiliar = auxiliar * -1;
+      }
+      //adicionando os valores na variavel de somas
+      soma_desvios = soma_desvios + auxiliar;
+    });
+    //cálculos finais e colocando na variável definitiva o resultado
+    let r = soma_desvios / num;
+    setDesvioMedio(r);
   };
 
   const varianciaAmostral = () => {
+    //criando variaveis locais para o calculo
     let n = this.numero - 1;
-    let media;
-    let somaValores;
-    //setar resultado (somaValores / n)
+    let media = resultadoMedia;
+    let somaValores = 0;
+    //mapeamento dos dados
+    dados.map(item => {
+      //calculando os valores pela fórmula de variãncia e somando na variavel
+      let calculo = (item.value - media) ** 2;
+      somaValores = somaValores + calculo;
+    });
+    //cálculos finais e setando o resultado na variável definitiva
+    let r = somaValores / n;
+    setVarianciaA(r);
   };
 
   const varianciaPopulacional = () => {
+    //criando as variaveis locais para o calculo
     let n = this.numero;
-    let media;
-    let somaValores;
-    //setar resultado (somaValores / n)
+    let media = resultadoMedia;
+    let somaValores = 0;
+    //mapeando os dados
+    dados.map(item => {
+      //calculando os valores com a fórula e adicionando na variável
+      let calculo = (item.value - media) ** 2;
+      somaValores = somaValores + calculo;
+    });
+    //cálculos finais e adicionando na variável final
+    let r = somaValores / n;
+    setVarianciaP(r);
   };
 
   const desvioPadrao = () => {
-    //setando resultado (raiz da variancia)
+    //pegando o valor da variancia
+    let varianc = varianciaA;
+    //calculando a raiz quadrada da variancia
+    let r = sqrt(varianc);
+    //setando na variável de desvio padrão
+    setDp(r);
   };
 
   const coeficienteVariacao = () => {
+    //pegando os valores de desvio e média para calculo
     let desvio = this.dp;
     let media = this.resultadoMedia;
-    //setando resultado ((desvio/media)*100)
-    console.log("te amo");
+    //calculando o coeficiente
+    let r = (desvio / media) * 100;
+    //setando a variável final
+    setCv(r);
   };
 
   return (
