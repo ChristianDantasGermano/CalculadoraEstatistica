@@ -16,22 +16,16 @@ export default function App() {
   //variaveis gerais
   const [dados, setDados] = useState([]);
   const [pesos, setPesos] = useState([]);
-  const [mediana, setMediana] = useState(0);
-  const [moda, setModa] = useState("");
-  const [numero, setNumero] = useState(0);
-  const [resultadoMedia, setResultadomedia] = useState(0);
-
-  //variaveis de dispersão
-  const [amplitude, setAmplitude] = useState(0);
-  const [dp, setDp] = useState(0);
-  const [variancia, setVariancia] = useState(0);
-  const [cv, setCv] = useState(0);
 
   //controle Tela
   const [tela, setTela] = useState(0);
   //Tela media Aritimetica
   const [valorMediaA, setValorMediaA] = useState([]);
   const [resultMediaA, setResultMediaA] = useState(0);
+  //Tela media Ponderada
+  const [valorMediaP, setValorMediaP] = useState([]);
+  const [pesoMediaP, setPesoMediaP] = useState([]);
+  const [resultMediaP, setResultMediaP] = useState(0);
 
   //Monitorar variaveis de controle
   useEffect(() => {
@@ -56,13 +50,33 @@ export default function App() {
     setValorMediaA([...valorMediaA]);
   };
 
+  //Funções Tela média Ponderada
+  const addValorMediaP = e => {
+    e.preventDefault();
+    setValorMediaP([...valorMediaP, ""]);
+    setPesoMediaP([...pesoMediaP, ""]);
+  };
+
+  const handleChangeValorMediaP = (e, index) => {
+    valorMediaP[index] = e.target.value;
+    setValorMediaP([...valorMediaP]);
+  };
+
+  const handleChangePesoMediaP = (e, index) => {
+    pesoMediaP[index] = e.target.value;
+    setPesoMediaP([...pesoMediaP]);
+  };
+
   const mediaAritmetica = () => {
     let soma = 0;
+    let cont = 0;
     valorMediaA.map(item => {
       soma = soma + parseInt(item);
+      cont++;
     });
-    console.log(soma);
-    setResultMediaA(soma / numero);
+    let r = soma / cont;
+    console.log(r);
+    setResultMediaA(r);
   };
   const mediaPonderada = () => {
     let somaValor = 0;
@@ -184,7 +198,61 @@ export default function App() {
       )}
       {tela === 1 && (
         <container className="container-fluid">
-          <p>2</p>
+          <Row>
+            <Button color="primary" onClick={addValorMediaP}>
+              +
+            </Button>
+          </Row>
+          <Row>
+            <Col sm={6}>
+              {valorMediaP.map((valormedia, index) => (
+                <FormGroup>
+                  <Input
+                    type="number"
+                    name="valorMediaP"
+                    id="valorMediaP"
+                    placeholder="Valor"
+                    value={valormedia}
+                    onChange={e => handleChangeValorMediaP(e, index)}
+                  />
+                </FormGroup>
+              ))}
+            </Col>
+            <Col sm={6}>
+              {pesoMediaP.map((pesomedia, index) => (
+                <FormGroup key={index}>
+                  <Input
+                    type="number"
+                    name="pesoMediaP"
+                    id="pesoMediaP"
+                    placeholder="Peso"
+                    value={pesomedia}
+                    onChange={e => handleChangePesoMediaP(e, index)}
+                  />
+                </FormGroup>
+              ))}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediaA"
+                  id="valorMediaA"
+                  placeholder="Resultado"
+                  value={resultMediaA}
+                  disabled
+                />
+              </FormGroup>
+            </Col>
+            <Col>
+              <Button color="primary" onClick={mediaAritmetica}>
+                Calcular Média
+              </Button>
+            </Col>
+          </Row>
         </container>
       )}
     </div>
