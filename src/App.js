@@ -29,11 +29,20 @@ export default function App() {
   //Tela Mediana
   const [mediana, setMediana] = useState(0);
   //Tela Moda
+  const [resultModa, setResultModa] = useState(0);
   //Tela Desvio Médio
+  const [resultDesvioMedio, setResultDesvioMedio] = useState(0);
   //Tela Variância Amostral
+  const [resultVarianciaAmostral, setResultVarianciaAmostral] = useState(0);
   //Tela Variância Populacional
+  const [
+    resultVarianciaPopulacional,
+    setResultVarianciaPopulacional
+  ] = useState(0);
   //Tela Desvio Padrão
+  const [resultDesvioPadrao, setResultDesvioPadrao] = useState(0);
   //Tela Coeficiente de Variação
+  const [resultCoeficienteVariacao, setResultCoeficienteVariacao] = useState(0);
 
   //Monitorar variaveis de controle
   useEffect(() => {
@@ -56,6 +65,21 @@ export default function App() {
   };
   const telamoda = () => {
     setTela(3);
+  };
+  const telaDesvioMedio = () => {
+    setTela(4);
+  };
+  const telaVariancaAmostral = () => {
+    setTela(5);
+  };
+  const telaVariancaPopulacional = () => {
+    setTela(6);
+  };
+  const telaDesvioPadrao = () => {
+    setTela(7);
+  };
+  const telaCoeficienteVarianca = () => {
+    setTela(8);
   };
   //Funções Tela média
   const addValorMediaA = e => {
@@ -115,7 +139,7 @@ export default function App() {
   const calculoMediana = () => {
     //verificação de condições de par ou ímpar do número de dados do input
     //para saber o valor ou valores centrais
-    if (contMediana % 2 == 1) {
+    if (contMediaA % 2 == 1) {
       let index = (contMediaA + 1) / 2;
       //setando o valor central na variávekl
       setMediana(valorMediaA[index - 1]);
@@ -157,15 +181,15 @@ export default function App() {
 
   const desvioMedio = () => {
     //setando as variaveis para o cálculo
-    let media = resultadoMedia;
-    let num = numero;
+    let media = resultMediaA;
+    let num = contMediaA;
     let soma_desvios = 0;
     //mapeando os dados
-    dados.map(item => {
+    valorMediaA.map(item => {
       //criando variavel auxiliar para o calculo dos desvios
       let auxiliar = 0;
       //calculando o desvio com a fórmula
-      auxiliar = auxiliar + (item.value - media);
+      auxiliar = auxiliar + (item - media);
       //caso o valor dê negativo, é multiplicado para
       // virar positivo para a soma
       if (auxiliar < 0) {
@@ -176,83 +200,66 @@ export default function App() {
     });
     //cálculos finais e colocando na variável definitiva o resultado
     let r = soma_desvios / num;
-    setDesvioMedio(r);
+    setResultDesvioMedio(r);
   };
 
   const varianciaAmostral = () => {
     //criando variaveis locais para o calculo
-    let n = this.numero - 1;
-    let media = resultadoMedia;
+    let n = contMediaA - 1;
+    let media = resultMediaA;
     let somaValores = 0;
     //mapeamento dos dados
-    dados.map(item => {
+    valorMediaA.map(item => {
       //calculando os valores pela fórmula de variãncia e somando na variavel
-      let calculo = (item.value - media) ** 2;
+      let calculo = (item - media) ** 2;
       somaValores = somaValores + calculo;
     });
     //cálculos finais e setando o resultado na variável definitiva
+    console.log("somaValores", somaValores);
     let r = somaValores / n;
-    setVarianciaA(r);
+    setResultVarianciaAmostral(r);
   };
 
   const varianciaPopulacional = () => {
     //criando as variaveis locais para o calculo
-    let n = this.numero;
-    let media = resultadoMedia;
+    let n = contMediaA;
+    let media = resultMediaA;
     let somaValores = 0;
     //mapeando os dados
-    dados.map(item => {
+    valorMediaA.map(item => {
       //calculando os valores com a fórula e adicionando na variável
-      let calculo = (item.value - media) ** 2;
+      let calculo = (item - media) ** 2;
       somaValores = somaValores + calculo;
     });
     //cálculos finais e adicionando na variável final
     let r = somaValores / n;
-    setVarianciaP(r);
+    setResultVarianciaPopulacional(r);
   };
 
   const desvioPadrao = () => {
     //pegando o valor da variancia
-    let varianc = varianciaA;
+    let varianc = resultVarianciaPopulacional;
     //calculando a raiz quadrada da variancia
     let r = sqrt(varianc);
     //setando na variável de desvio padrão
-    setDp(r);
+    setResultDesvioPadrao(r);
   };
 
   const coeficienteVariacao = () => {
     //pegando os valores de desvio e média para calculo
-    let desvio = this.dp;
-    let media = this.resultadoMedia;
+    let desvio = resultDesvioPadrao;
+    let media = resultMediaA;
     //calculando o coeficiente
-    let r = (desvio / media) * 100;
+    let r = desvio / media;
     //setando a variável final
-    setCv(r);
+    r = r * 100;
+    console.log("desvio", desvio);
+    console.log("media", media);
+    setResultCoeficienteVariacao(r);
   };
 
   return (
     <div className="container align-self-center" id="container-home">
-      <Col style={{ padding: 10 }}>
-        <Card>
-          <h1>MENU</h1>
-          <br />
-
-          <div id="buttons">
-            <Button color="primary" onClick={telamediaA}>
-              Media Aritmetica
-            </Button>{" "}
-            <Button color="primary" onClick={telamediaP}>
-              Media Ponderada
-            </Button>{" "}
-            <Button color="primary" onClick={telamediana}>
-              Mediana
-            </Button>{" "}
-            <Button color="primary" onClick={telamoda}>
-              Moda
-            </Button>{" "}
-          </div>
-        </Card>
-      </Col>
       {tela === 0 && (
         <Container className="container-fluid">
           <Row>
@@ -260,7 +267,7 @@ export default function App() {
               +
             </Button>
           </Row>
-
+          
           <Row>
             {valorMediaA.map((media, index) => (
               <Col sm={3} key={index}>
@@ -391,12 +398,122 @@ export default function App() {
                   name="valorMediana"
                   id="valorMediana"
                   placeholder="Resultado"
-                  value={mediana}
+                  value={resultModa}
                   disabled
                 />
               </FormGroup>
               <Button color="primary" onClick={calculoMediana}>
                 Calcular Moda
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {tela === 4 && (
+        <Container className="container-fluid">
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediana"
+                  id="valorMediana"
+                  placeholder="Resultado"
+                  value={resultDesvioMedio}
+                  disabled
+                />
+              </FormGroup>
+              <Button color="primary" onClick={desvioMedio}>
+                Calcular Desvio Médio
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {tela === 5 && (
+        <Container className="container-fluid">
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediana"
+                  id="valorMediana"
+                  placeholder="Resultado"
+                  value={resultVarianciaAmostral}
+                  disabled
+                />
+              </FormGroup>
+              <Button color="primary" onClick={varianciaAmostral}>
+                Calcular Variância Amostral
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {tela === 6 && (
+        <Container className="container-fluid">
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediana"
+                  id="valorMediana"
+                  placeholder="Resultado"
+                  value={resultVarianciaPopulacional}
+                  disabled
+                />
+              </FormGroup>
+              <Button color="primary" onClick={varianciaPopulacional}>
+                Calcular Variância Populacional
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {tela === 7 && (
+        <Container className="container-fluid">
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediana"
+                  id="valorMediana"
+                  placeholder="Resultado"
+                  value={resultDesvioPadrao}
+                  disabled
+                />
+              </FormGroup>
+              <Button color="primary" onClick={desvioPadrao}>
+                Calcular Desvio Padrão
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {tela === 8 && (
+        <Container className="container-fluid">
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediana"
+                  id="valorMediana"
+                  placeholder="Resultado"
+                  value={resultCoeficienteVariacao}
+                  disabled
+                />
+              </FormGroup>
+              <Button color="primary" onClick={coeficienteVariacao}>
+                Calcular Coeficiente de Variação
               </Button>
             </Col>
           </Row>
