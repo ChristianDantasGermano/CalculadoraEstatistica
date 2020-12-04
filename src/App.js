@@ -1,6 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
-import { Card, Col, Button } from "reactstrap";
+import { sqrt } from "mathjs";
+import {
+  Card,
+  Col,
+  Button,
+  Row,
+  FormGroup,
+  Input,
+  Container
+} from "reactstrap";
 
 export default function App() {
   //variaveis gerais
@@ -19,13 +28,31 @@ export default function App() {
 
   //controle Tela
   const [tela, setTela] = useState(0);
+  //Tela media Aritimetica
+  const [valorMediaA, setValorMediaA] = useState([]);
+  const [resultMediaA, setResultMediaA] = userState(0);
 
+  //Monitorar variaveis de controle
+  useEffect(() => {
+    console.log(valorMediaA);
+  }, [valorMediaA]);
+
+  //Funções gerias da tela
   const telamediaA = () => {
     setTela(0);
-    console.log("oi");
   };
   const telamediaP = () => {
     setTela(1);
+  };
+  //Funções Tela média
+  const addValorMediaA = e => {
+    e.preventDefault();
+    setValorMediaA([...valorMediaA, ""]);
+  };
+
+  const handleChangeMediaA = (e, index) => {
+    valorMediaA[index] = e.target.value;
+    setValorMediaA([...valorMediaA]);
   };
 
   const mediaAritmetica = () => {
@@ -33,7 +60,7 @@ export default function App() {
     dados.map(item => {
       soma = soma + item.value;
     });
-    setResultadomedia(soma / numero);
+    setResultMediaA(soma / numero);
   };
   const mediaPonderada = () => {
     let somaValor = 0;
@@ -96,10 +123,10 @@ export default function App() {
           <br />
 
           <div id="buttons">
-            <Button color="primary" OnClick={telamediaA}>
+            <Button color="primary" onClick={telamediaA}>
               Media Aritmetica
             </Button>{" "}
-            <Button color="primary" OnClick={telamediaP}>
+            <Button color="primary" onClick={telamediaP}>
               Media Ponderada
             </Button>{" "}
             <Button color="primary">Media Aritmetica</Button>{" "}
@@ -107,13 +134,46 @@ export default function App() {
           </div>
         </Card>
       </Col>
-      {tela === 1 && (
-        <container class="container-fluid">
-          <p>1</p>
-        </container>
+      {tela === 0 && (
+        <Container className="container-fluid">
+          <Row>
+            <Button color="primary" onClick={addValorMediaA}>
+              +
+            </Button>
+          </Row>
+
+          <Row>
+            {valorMediaA.map((media, index) => (
+              <Col sm={3} key={index}>
+                <FormGroup>
+                  <Input
+                    type="number"
+                    name="valorMediaA"
+                    id="valorMediaA"
+                    placeholder="Valor"
+                    value={media}
+                    onChange={e => handleChangeMediaA(e, index)}
+                  />
+                </FormGroup>
+              </Col>
+            ))}
+          </Row>
+          <Row>
+            <FormGroup>
+              <Input
+                type="number"
+                name="valorMediaA"
+                id="valorMediaA"
+                placeholder="Resultado"
+                value={resultMediaA}
+                disabled
+              />
+            </FormGroup>
+          </Row>
+        </Container>
       )}
       {tela === 1 && (
-        <container class="container-fluid">
+        <container className="container-fluid">
           <p>2</p>
         </container>
       )}
