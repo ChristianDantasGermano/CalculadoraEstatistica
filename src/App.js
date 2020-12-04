@@ -26,6 +26,8 @@ export default function App() {
   const [valorMediaP, setValorMediaP] = useState([]);
   const [pesoMediaP, setPesoMediaP] = useState([]);
   const [resultMediaP, setResultMediaP] = useState(0);
+  //Tela Mediana
+  const [contMediana, SetContMediana] = useState(0);
 
   //Monitorar variaveis de controle
   useEffect(() => {
@@ -74,20 +76,23 @@ export default function App() {
       soma = soma + parseInt(item);
       cont++;
     });
+    SetContMediana(cont);
     let r = soma / cont;
-    console.log(r);
     setResultMediaA(r);
   };
   const mediaPonderada = () => {
     let somaValor = 0;
     let somaPeso = 0;
-    dados.map(item => {
-      somaValor = somaValor + item.value;
+    for (let i = 0; i < valorMediaP.length; i++) {
+      let calculo = valorMediaP[i] * pesoMediaP[i];
+      somaValor = somaValor + calculo;
+    }
+    pesoMediaP.map(item => {
+      somaPeso = somaPeso + parseInt(item);
     });
-    pesos.map(item => {
-      somaPeso = somaPeso + item.value;
-    });
-    setResultadomedia(somaValor / somaPeso);
+    console.log(somaPeso);
+    let r = somaValor / somaPeso;
+    setResultMediaP(r);
   };
 
   const calculoMediana = () => {
@@ -145,7 +150,7 @@ export default function App() {
             <Button color="primary" onClick={telamediaP}>
               Media Ponderada
             </Button>{" "}
-            <Button color="primary">Media Aritmetica</Button>{" "}
+            <Button color="primary">Mediana</Button>{" "}
             <Button color="primary">Media Aritmetica</Button>{" "}
           </div>
         </Card>
@@ -197,7 +202,7 @@ export default function App() {
         </Container>
       )}
       {tela === 1 && (
-        <container className="container-fluid">
+        <Container className="container-fluid">
           <Row>
             <Button color="primary" onClick={addValorMediaP}>
               +
@@ -206,7 +211,7 @@ export default function App() {
           <Row>
             <Col sm={6}>
               {valorMediaP.map((valormedia, index) => (
-                <FormGroup>
+                <FormGroup key={index}>
                   <Input
                     type="number"
                     name="valorMediaP"
@@ -242,18 +247,18 @@ export default function App() {
                   name="valorMediaA"
                   id="valorMediaA"
                   placeholder="Resultado"
-                  value={resultMediaA}
+                  value={resultMediaP}
                   disabled
                 />
               </FormGroup>
             </Col>
             <Col>
-              <Button color="primary" onClick={mediaAritmetica}>
-                Calcular Média
+              <Button color="primary" onClick={mediaPonderada}>
+                Calcular Média Ponderada
               </Button>
             </Col>
           </Row>
-        </container>
+        </Container>
       )}
     </div>
   );
