@@ -9,6 +9,7 @@ export default function App() {
   const [mediana, setMediana] = useState(0);
   const [moda, setModa] = useState("");
   const [numero, setNumero] = useState(0);
+  const[dm, setDesvioMedio] = useState(0);
   const [resultadoMedia, setResultadomedia] = useState(0);
 
   //variaveis de dispersão
@@ -53,13 +54,17 @@ export default function App() {
   //3- Mediana
 
   const calculoMediana = () => {
+    //verificação de condições de par ou ímpar do número de dados do input
+    //para saber o valor ou valores centrais
     if (n % 2 == 1) {
       let index = (n + 1) / 2;
+      //setando o valor central na variávekl
       setMediana(dados[index]);
     } else if (n % 2 == 0) {
       let index = (n + 1) / 2;
       let valor1 = dados[index];
       let valor2 = dados[index + 1];
+      //pegando a média dos dois valores centrais e setando na variável
       let resultado = (valor1 + valor2) / 2;
       setMediana(resultado);
     }
@@ -95,9 +100,18 @@ export default function App() {
   //CALCULO DO DESVIO MÉDIO
 
   const desvioMedio = () => {
-    let media;
-    let n;
-    let soma_desvios;
+    let media = resultadoMedia
+    let num = numero
+    let soma_desvios = 0
+    dados.map(item =>{
+      let auxiliar = 0
+      auxiliar = auxiliar + (item.value - media)
+      if(auxiliar < 0){
+        auxiliar = auxiliar * (-1)
+      }
+      soma_desvios = soma_desvios + auxiliar
+    })
+    setDesvioMedio(soma_desvios/num);
   };
 
   //CÁLCULO DAS DISPERSÕES
@@ -106,9 +120,14 @@ export default function App() {
 
   const varianciaAmostral = () => {
     let n = this.numero - 1;
-    let media;
-    let somaValores;
-    //setar resultado (somaValores / n)
+    let media = resultadoMedia
+    let somaValores = 0;
+    dados.map(item => {
+      let calculo = (item.value - media)**2
+      somaValores = somaValores + calculo
+    })
+    setVariancia()
+
   };
 
   //2- Variância Populacional
