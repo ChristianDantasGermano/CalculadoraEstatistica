@@ -27,12 +27,17 @@ export default function App() {
   const [pesoMediaP, setPesoMediaP] = useState([]);
   const [resultMediaP, setResultMediaP] = useState(0);
   //Tela Mediana
-  const [contMediana, SetContMediana] = useState(0);
+  const [contMediana, setContMediana] = useState(0);
+  const [mediana, setMediana] = useState(0);
 
   //Monitorar variaveis de controle
   useEffect(() => {
-    console.log(valorMediaA);
-  }, [valorMediaA]);
+    console.log("mediana", mediana);
+  }, [mediana]);
+
+  useEffect(() => {
+    console.log("Contmediana", contMediana);
+  }, [contMediana]);
 
   //Funções gerias da tela
   const telamediaA = () => {
@@ -40,6 +45,9 @@ export default function App() {
   };
   const telamediaP = () => {
     setTela(1);
+  };
+  const telamediana = () => {
+    setTela(2);
   };
   //Funções Tela média
   const addValorMediaA = e => {
@@ -68,7 +76,7 @@ export default function App() {
     pesoMediaP[index] = e.target.value;
     setPesoMediaP([...pesoMediaP]);
   };
-
+  //Calcular media aritmetica
   const mediaAritmetica = () => {
     let soma = 0;
     let cont = 0;
@@ -76,10 +84,11 @@ export default function App() {
       soma = soma + parseInt(item);
       cont++;
     });
-    SetContMediana(cont);
+    setContMediana(cont);
     let r = soma / cont;
     setResultMediaA(r);
   };
+  //Calcular média ponderada
   const mediaPonderada = () => {
     let somaValor = 0;
     let somaPeso = 0;
@@ -94,17 +103,46 @@ export default function App() {
     let r = somaValor / somaPeso;
     setResultMediaP(r);
   };
-
+  //Mediana
   const calculoMediana = () => {
-    if (n % 2 == 1) {
-    } else if (n % 2 == 0) {
+    //verificação de condições de par ou ímpar do número de dados do input
+    //para saber o valor ou valores centrais
+    if (contMediana % 2 == 1) {
+      let index = (contMediana + 1) / 2;
+      //setando o valor central na variávekl
+      setMediana(valorMediaA[index - 1]);
+    } else if (contMediana % 2 == 0) {
+      let index = contMediana / 2;
+      let valor1 = parseInt(valorMediaA[index - 1]);
+      let valor2 = parseInt(valorMediaA[index]);
+      //pegando a média dos dois valores centrais e setando na variável
+      let resultado = (valor1 + valor2) / 2;
+      setMediana(resultado);
     }
   };
 
-  const calculoModa = () => {
-    dados.map();
+  const summarize = dados => toArray(dados.reduce(summarizeFn, {}));
+  const summarizeFn = function(summary, num) {
+    summary[num] = summary[num]
+      ? { num, count: summary[num].count + 1 }
+      : { num, count: 1 };
+    return summary;
   };
+  //achar o maior valor entre as frequencias
+  const findMode = summary => summary.reduce(findModeFn, 0);
+  const findModeFn = (max, { count }) => (count > max ? count : max);
+  //cria um array em que só são adicionados os valores da contagem da moda
+  const filterMode = (summary, mode) =>
+    summary.filter(({ count }) => count == mode);
 
+  const getValues = items => items.map(({ num }) => num);
+
+  const calculoModa = function(dados) {
+    const summary = summarize(dados);
+    const mode = findMode(summary);
+    const modeItems = filterMode(summary, mode);
+    return modeItems.length == summary.length ? [] : getValues(modeItems);
+  };
   const desvioMedio = () => {
     let media;
     let n;
@@ -150,7 +188,9 @@ export default function App() {
             <Button color="primary" onClick={telamediaP}>
               Media Ponderada
             </Button>{" "}
-            <Button color="primary">Mediana</Button>{" "}
+            <Button color="primary" onClick={telamediana}>
+              Mediana
+            </Button>{" "}
             <Button color="primary">Media Aritmetica</Button>{" "}
           </div>
         </Card>
@@ -255,6 +295,28 @@ export default function App() {
             <Col>
               <Button color="primary" onClick={mediaPonderada}>
                 Calcular Média Ponderada
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      )}
+      {tela === 2 && (
+        <Container className="container-fluid">
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediana"
+                  id="valorMediana"
+                  placeholder="Resultado"
+                  value={mediana}
+                  disabled
+                />
+              </FormGroup>
+              <Button color="primary" onClick={calculoMediana}>
+                Calcular Mediana
               </Button>
             </Col>
           </Row>
