@@ -8,7 +8,8 @@ import {
   Row,
   FormGroup,
   Input,
-  Container
+  Container,
+  Label
 } from "reactstrap";
 
 export default function App() {
@@ -30,7 +31,7 @@ export default function App() {
   const [tela, setTela] = useState(0);
   //Tela media Aritimetica
   const [valorMediaA, setValorMediaA] = useState([]);
-  const [resultMediaA, setResultMediaA] = userState(0);
+  const [resultMediaA, setResultMediaA] = useState(0);
 
   //Monitorar variaveis de controle
   useEffect(() => {
@@ -57,9 +58,10 @@ export default function App() {
 
   const mediaAritmetica = () => {
     let soma = 0;
-    dados.map(item => {
-      soma = soma + item.value;
+    valorMediaA.map(item => {
+      soma = soma + parseInt(item);
     });
+    console.log(soma);
     setResultMediaA(soma / numero);
   };
   const mediaPonderada = () => {
@@ -159,16 +161,24 @@ export default function App() {
             ))}
           </Row>
           <Row>
-            <FormGroup>
-              <Input
-                type="number"
-                name="valorMediaA"
-                id="valorMediaA"
-                placeholder="Resultado"
-                value={resultMediaA}
-                disabled
-              />
-            </FormGroup>
+            <Col>
+              <FormGroup>
+                <Label for="exampleEmail">Resultado:</Label>
+                <Input
+                  type="number"
+                  name="valorMediaA"
+                  id="valorMediaA"
+                  placeholder="Resultado"
+                  value={resultMediaA}
+                  disabled
+                />
+              </FormGroup>
+            </Col>
+            <Col>
+              <Button color="primary" onClick={mediaAritmetica}>
+                Calcular Média
+              </Button>
+            </Col>
           </Row>
         </Container>
       )}
